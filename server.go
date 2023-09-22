@@ -1,3 +1,19 @@
+/*
+Config
+
+Encryption
+
+Accounts
+
+
+Multiple chats on single server
+
+Text formating
+
+File transfer
+*/
+
+
 package main
 
 
@@ -85,7 +101,7 @@ func FmtMsg (who string, isInfo bool, msg string) string {
 		s = " @ "
 	}
 
-	return cGreen + who + reset + s + msg + reset + "\n"
+	return italic + cGreen + who + reset + s + msg + reset + "\n"
 }
 
 
