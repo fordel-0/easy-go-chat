@@ -1,4 +1,6 @@
 /*
+History
+
 Config
 
 Encryption
@@ -32,10 +34,11 @@ const (
     underline = "\033[4m"
     strike = "\033[9m"
     italic = "\033[3m"
+	blinking = "\033[25m"
 
     cRed = "\033[31m"
     cGreen = "\033[32m"
-    cYellow = "\033[33m"
+    cYellow = "\033[93m"
     cBlue = "\033[34m"
     cPurple = "\033[35m"
     cCyan = "\033[36m"
@@ -80,6 +83,7 @@ func handle(conn net.Conn) {
 
 		Broadcast(addr, false, string(m))
 	}
+	RemoveConn(conn)
 	Broadcast(addr, true, "disconnected")
 }
 
@@ -88,7 +92,8 @@ func Broadcast(who string, isInfo bool, msg string) {
 	m := FmtMsg(who, isInfo, msg)
 	fmt.Print(m)
 	for _, conn := range conns {
-		conn.Write([]byte(m))
+		_, err := conn.Write([]byte(m))
+		p(err)
 	}
 }
 
@@ -96,12 +101,21 @@ func Broadcast(who string, isInfo bool, msg string) {
 func FmtMsg (who string, isInfo bool, msg string) string {
 	var s string
 	if isInfo {
-		s = cYellow + " # "
+		s = italic + cYellow + " # "
 	} else {
 		s = " @ "
 	}
 
-	return italic + cGreen + who + reset + s + msg + reset + "\n"
+	return bold + cGreen + who + reset + s + msg + reset + "\n"
+}
+
+
+func RemoveConn(conn net.Conn) {
+	for i, curConn := range conns {
+		if conn == curConn {
+			conns = append(conns[:i], conns[i+1:]...)
+		}
+	}
 }
 
 

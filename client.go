@@ -35,7 +35,7 @@ func input() ([]byte) {
 	p(err)
 
 	fmt.Print("\033[1A\033[2K\r")
-	return s
+	return append(s, 0x0a)
 }
 
 
